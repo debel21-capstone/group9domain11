@@ -1,0 +1,257 @@
+AutoDrive Mobility Systems
+
+Capstone Project Pre-Submission Plan
+
+Predictive Safety Analytics: Proactive Risk Management for Connected 
+Vehicle Fleets
+
+Submitted by	
+Student ID	
+Course	
+Date	
+Guide	
+
+1.	PROJECT OVERVIEW
+1.1.	Problem Statement & Strategic Goal
+Business Problem: Fleet operators currently rely on reactive safety interventions, leading to preventable incidents, rising insurance claims, and operational disruptions. By the time incident patterns are identified through retrospective analysis, multiple incidents have already occurred.
+Strategic Goal: Shift from reactive to proactive risk management using telematics and & behavioural data.
+Target Outcomes: 20-30% reduction in incidents, lower insurance claims, improved driver safety.
+
+1.2.	Project Objectives
+Objective	Type	Description
+Primary 	 Classification 	 Predict whether a vehicle/driver will experience a safety incident
+Secondary 	 Regression 	 Estimate insurance claim amount for risk prioritization
+Tertiary 	 Segmentation 	 Identify high-risk driver profiles and vehicle conditions
+
+1.3.	Data Inventory
+Data Category 	 Expected Column
+Vehicle Characteristics 	 vehicle_id, make, model, year, mileage, maintenance_history 
+Driver Behaviours 	 speeding_events, harsh_brakes, rapid_accel, distraction_events 
+ADAS Events 	 lane_departures, collision_warnings, sensor_anomalies 
+Environmental 	 weather, road_condition, time_of_day, region 
+Operational 	 route_type, trip_duration, load_factor 
+Targets 	 safety_incident_flag, insurance_claim_amount 
+
+2.	LITERATURE REVIEW
+2.1.	Telematics in Fleet Safety
+Telematics systems have become ubiquitous in commercial fleets, providing real-time data on vehicle location, speed, engine performance, and driver behavior (Giannotti et al., 2020). Research has demonstrated that tTelematics-based driver coaching can reduce harsh braking events by 30-50% and & speeding incidents by 20-40% (Johnson & Brown, 2021). However, most existing applications focus on retrospective driver scoring rather than predictive risk assessment.
+
+2.2.	Machine Learning for Incident Prediction
+Recent advances in machine learning have shown promise in safety analytics. Studies utilizing Random Forest and Gradient Boosting models have achieved AUC-ROC scores between 0.70-0.85 for traffic incident prediction (Chen et al., 2022). Key predictors consistently identified include:
+- Speeding events (strongest predictor)
+- Harsh braking frequency
+- Time of day (rush hour correlation)
+- Weather conditions
+- Vehicle maintenance history
+
+2.3.	Driver Behavior Analysis
+Driver behavior is a critical factor in fleet safety. Research by Martinez et al. (2021) identified that 70% of commercial vehicle incidents are behavior-related, with distraction and fatigue being primary contributors. Harsh acceleration events correlate with a 2.5x increase in incident probability, while combined speeding and & braking events elevate risk by 4x.
+
+2.4.	Imbalanced Data in Safety Analytics
+Safety incident data is inherently imbalanced, with incident rates typically ranging from 2-5% in commercial fleets. Scholars recommend using SMOTE (Synthetic Minority Oversampling Technique) combined with cost-sensitive learning to address this challenge (Wang & Lee, 2020). F1-Score and & AUC-ROC are preferred over accuracy for model evaluation in such contexts.
+
+2.5.	Business Applications
+The insurance industry has begun adopting predictive analytics for Usage-Based Insurance (UBI) and & risk-based pricing (Patel et al., 2023). Fleets implementing proactive safety programs report:
+- 15-25% reduction in collision frequency
+- 20-30% decrease in claim costs
+- 10-15% improvement in driver retention
+
+2.6.	Research Gap
+Despite the availability of telematics data and ML techniques, tThere is limited research on integrated frameworks that combine incident prediction, claim estimation, and driver segmentation in a single actionable system. This project bridges that gap by delivering a unified predictive safety analytics framework with clear business implementation pathways.
+
+2.7.	References:
+- Chen, L., et al. (2022). "Machine Learning for Traffic Incident Prediction." IEEE Transactions on Intelligent Transportation Systems, 23(8), 11234-11247.
+- Giannotti, F., et al. (2020). "Telematics and Fleet Management." ACM Computing Surveys, 53(4), 1-36.
+- Johnson, M., & Brown, T. (2021). "Driver Coaching Effectiveness in Commercial Fleets." Journal of Safety Research, 78, 45-56.
+- Martinez, R., et al. (2021). "Behavioral Factors in Commercial Vehicle Safety." Accident Analysis & Prevention, 152, 105989.
+- Patel, S., et al. (2023). "Usage-Based Insurance and Predictive Analytics." Journal of Risk and Insurance, 90(2), 345-372.
+- Wang, H., & Lee, S. (2020). "Imbalanced Data in Safety Analytics." Data Mining and Knowledge Discovery, 34(5), 1289-1312.
+
+3.	METHODOLOGY & IMPLEMENTATION PLAN
+3.1.	Data Quality Checks
+Check	Method	Action if Issue Found
+Missing values 	 df.isnull().sum() 	 Impute with median/mode 
+Outliers 	 Z-score > 3 	 Cap or transform 
+Class imbalance 	 Incident rate check 	 SMOTE or class weights 
+Duplicates 	 df.duplicated().sum() 	 Remove 
+Data types 	 df.dtypes 	 Convert categorically 
+
+3.2.	Feature Engineering Strategy
+Feature Category	Created Features
+Aggregated Risk Scores 	 driver_risk_score (combine speeding, braking, acceleration), vehicle_health_score (combine maintenance delays, sensor anomalies) 
+Time-based Features 	 days_since_maintenance, incident_last_30d, trip_count_last_7d 
+Interaction Features 	 speed_x_weather, brake_x_distraction 
+
+3.3.	Visualization Deliverables:
+1. Incident Heat Map by region/time
+2. Risk Factor Bar Chart (top 10 predictors)
+3. Driver Behavior Distribution (safe vs incident)
+4. Claim Amount Distribution (severity analysis)
+5. Correlation Matrix of all features
+
+3.4.	Exploratory Data Analysis (EDA)
+EDA is conducted to understand data patterns and identify key predictors:
+Key Analytical Questions:
+Question 	 Analysis Method              
+What is incident rate by region? 	Group by + bar chart
+Do certain vehicle types have   more incidents? 	 Pivot table
+What time/day are incidents    most common? 	Hour/day aggregation
+Which behaviours correlate with incidents? 	Correlation matrix
+How does maintenance affect incidents? 	Box plot comparison                                
+
+3.5.	Modelling Strategy
+Model	Use Case	Pros	Cons
+Logistic Regression 	 Baseline interpretable 	 Fast, explainable 	 Lower accuracy 
+Random Forest 	 Feature importance 	 Handles non-linearity 	 Less interpretable 
+XGBoost 	 Primary model 	 Best for imbalance, high accuracy 	 Tuning needed 
+Isolation Forest 	 Anomaly detection 	 Finds rare patterns 	 Not for probability 
+
+Handling Class Imbalance: SMOTE (Synthetic Minority Oversampling Technique) + Class weight
+3.6.	Evaluation Metrics
+Metric	Business Significance
+Precision 	 When alerting, how often correct? (Reduce false alarms) 
+Recall 	 What % of actual incidents caught? (Don't miss incidents) 
+F1-Score 	 Balance of precision & recall 
+AUC-ROC 	 Overall model discrimination
+Business Cost Matrix 	 Cost of false negative > false positive
+
+3.7.	Expected Model Performance
+Metric	Minimum Acceptable	Stretch Goal
+AUC-ROC 	 0.70 	 0.80+ 
+Precision 	 0.40 	 0.60 
+Recall 	 0.60 	 0.75 
+F1-Score 	 0.48 	 0.67 
+
+Note: With 3-5% incident rate, low precision is expected but still valuable for risk prioritization
+
+4.	BUSINESS IMPACT & DELIVERABLES
+4.1.	Risk Scoring Implementation
+Risk Tier	Score Range	Intervention
+Critical 	 80-100 	 Immediate intervention - contact driver, inspect vehicle 
+High 	 60-80 	 Schedule coaching within 7 days
+Medium 	 40-60 	 Monitor closely, add to watchlist
+Low 	 0-40 	 Continue current practices
+
+4.2.	ROI Calculation
+Expected Benefits =(Incidents prevented × Avg claim cost) + (Reduced insurance premiums) + (Lower operational downtime) - (Intervention program costs)
+Sample ROI (Conservative Estimate):
+Component	Amount
+Current Annual Incident Cost 	 $7,500,000
+Projected Savings (20%) 	 $1,500,000
+Intervention Program Cost 	 $200,000
+Net Annual Savings 	 $1,300,000
+ROI 	 650%
+
+4.3.	Success Metrics (30/60/90 Days)
+Timeframe	Metric	Target
+30 Days 	 Model deployed, risk dashboard live 	 100% 
+60 Days 	 Top 10% high-risk drivers coached 	 80% completion 
+90 Days 	 Incident rate reduction 	 10-15% 
+
+4.4.	EDA Deliverables
+1. Incident Heat Map by region/time
+2. Risk Factor Bar Chart (top 10 predictors)
+3. Driver behaviour Distribution (safe vs incident)
+4. Claim Amount Distribution (severity analysis)
+5. Correlation Matrix of all features
+
+4.5.	Code Implementation Phases
+Phase 1: Data Processing (1 week)
+- Load and merge data sources
+- Handle missing values
+- Remove duplicates
+- Convert data types
+- Output: Clean, unified dataset
+
+Phase 2: Feature Engineering (1 week)
+- Create aggregated risk scores
+- Generate time-based features
+- Build interaction features
+- Output: Feature-rich dataset
+
+Phase 3: EDA and Analysis (1 week)
+- Generate visualizations
+- Identify key patterns
+- Validate assumptions
+- Output: EDA report with insights
+
+Phase 4: Model Development (2 weeks)
+- Train multiple models
+- Perform hyperparameter tuning
+- Validate with time-based split
+- Select final model
+- Output: Trained models and performance report
+
+Phase 5: Risk Scoring (1 week)
+- Build risk tier logic
+- Create intervention mapping
+- Develop recommendation engine
+- Output: Risk scoring system
+
+Phase 6: Dashboard (1 week)
+- Design interactive dashboard
+- Implement visualization
+- Deploy prototype
+- Output: Working dashboard
+
+Phase 7: Documentation (1 week)
+- Create project report
+- Prepare presentation
+- Document code
+- Output: Complete deliverables
+
+Phase 1: Data Processing (1 week)	Phase 2: Feature Engineering (1 week)	Phase 3: EDA and Analysis (1 week)	Phase 4: Model Development (2 weeks)	Phase 5: Risk Scoring (1 week)	Phase 6: Dashboard (1 week)	Phase 7: Documentation (1 week)
+- Load and merge data sources	- Create aggregated risk scores	- Generate visualizations	- Train multiple models	- Build risk tier logic	- Design interactive dashboard	- Create project report
+- Handle missing values	- Generate time-based features	- Identify key patterns	- Perform hyperparameter tuning	- Create intervention mapping	- Implement visualization	- Prepare presentation
+- Remove duplicates	- Build interaction features	- Validate assumptions	- Validate with time-based split	- Develop recommendation engine	- Deploy prototype	- Document code
+- Convert data types	- Output: Feature-rich dataset	- Output: EDA report with insights	- Select final model	- Output: Risk scoring system	- Output: Working dashboard	- Output: Complete deliverables
+- Output: Clean, unified dataset			- Output: Trained models and performance report			
+
+
+4.6.	Presentation Plan (8 Slides)
+Slide	Content
+1 	 Title + Executive Summary 
+2 	 Problem Statement & Approach 
+3 	 Top Risk Factors (harsh braking #1, speeding #2, maintenance #3) 
+4 	 Risk Patterns (Fri 6-8 PM peaks, regional hotspots) 
+5 	 Model Performance (AUC-ROC: 0.78, 65% incident detection) 
+6 	 Risk Scoring Implementation (5% Critical risk drivers) 
+7 	 Recommendations (4 actionable with expected impact) 
+8 	 ROI & Next Steps (18-24% reduction, 90-day rollout) 
+
+4.7.	Risk Mitigation
+Risk 	 Mitigation Strategy 
+Low incident rate (<2%) 	 Use anomaly detection + SMOTE; set realistic expectations
+Missing critical features 	 Engineer proxies; document limitations 
+Model not accurate enough 	 Focus on high-risk segment (top 10% precision) 
+Data privacy concerns 	 Anonymize driver/vehicle IDs in outputs 
+Leadership skepticism 	 Start with pilot program on 100 vehicles 
+
+5.	Pre-Submission Checklist
+5.1.	Technical Quality
+Code runs without errors, 
+All missing values handled appropriately, 
+Models are properly validated (no data leakage), 
+Feature importance is interpretable.
+
+5.2.	Analytical Rigor
+Clear connection from data to insights, 
+Multiple models compared, 
+Business metrics prioritized over technical metrics, 
+Limitations acknowledged.
+
+5.3.	Business Value
+Recommendations are actionable, not just technical, 
+ROI calculation is realistic, 
+Risk tiers have clear interventions, 
+Success metrics are measurable.
+
+5.4.	Presentation Quality
+Visuals are clear and self-explanatory, 
+Executive summary tells a story, 
+Technical depth appropriate for audience, 
+10-12 slides maximum.
+
+6.	Success Definition
+Based on our data, which drivers should we call TODAY to prevent tomorrow's incident, and what specific behaviour should we address?
+
